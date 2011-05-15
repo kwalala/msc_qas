@@ -3,10 +3,56 @@
 
 {% block title %}Define milestones{% endblock %}
 
-{% block content %}
-<h1>Define milestones</h1>
+{% block jquery %}
 
+    var milestones = $('#milestones').sortable({placeholder: "ui-state-highlight"});
+    var ml_tmpl = $('#ml-template').find("li:first-child");
+
+    function add_milestone(ms) {
+        var ml = ml_tmpl.clone();
+        ml.html(ml.html().replace("[CONTENT]", ms));
+        ml.appendTo(milestones);
+    }
+
+    {% for milestone in milestones %}
+    add_milestone("{{ milestone }}");
+    {% endfor %}
+
+
+    $('a.btn-delete').live("click", function(e) {
+        e.preventDefault();
+        $(this).parent()
+            .slideUp()
+            .queue("fx", function() {
+                $(this).remove();
+                $(this).dequeue();
+            });
+    });
+
+
+    $('#add-ms').submit(function(e) {
+        e.preventDefault();
+        var ms = $('#add-ms-content').val().trim();
+        if (ms != "") {
+            add_milestone(ms);
+        }
+        return false;
+    });
+{% endblock %}
+{% block content %}
+<h1>Define milestones for {{ course.name }}</h1>
+<ul class='hidden' id='ml-template' >
+    <li class="ui-state-default">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        [CONTENT] [<a href='' class='btn-delete'>x</a>]
+    </li>
+</ul>
 <div>
-    {{ course.name }}
+    <ul id='milestones' class='sortable-list'></ul>
+
+    <form id='add-ms'>
+        <input id='add-ms-content' type='text' value=''></input>
+        <input type='submit' value='Add milestone'></input>
+    </form>
 </div>
 {% endblock %}

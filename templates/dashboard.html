@@ -5,19 +5,21 @@
 {% block content %}
 <h1>Dashboard</h1>
 
-Welcome {{ user.username }}
-
-
 <div id='links'>
-<a href='{% url course_add %}'>Add course</a>
+Logged in as {{ user.username }} [ <a href='{% url course_add %}'>Add course</a> ]
 </div>
+
+<hr />
 
 {% if incomplete_courses %}
 <div id='course-listing'>
-    <h2>Pending activation</h2>
+    <h2>Pending Courses</h2>
     <ul>
     {% for course in incomplete_courses %}
-        <li><a href='{% url course_activate course.id %}'>{{ course.name }}</a></li>
+        <li>
+            <a href='{% url course_activate course.id %}'>{{ course.name }}</a>
+            <i>(Created {{ course.date_created|timesince }} ago)</i>
+        </li>
     {% endfor %}
     </ul>
 </div>
@@ -29,9 +31,10 @@ Welcome {{ user.username }}
     {% for course in courses %}
         <li>{{ course.name }}</li>
     {% empty %}
-        <li>-- no courses --</li>
+        <li>-- none --</li>
     {% endfor %}
     </ul>
 </div>
+
 
 {% endblock %}

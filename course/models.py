@@ -1,11 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-COURSE_CATEGORY = (
-    (1, "Start a New Course"),
-    (2, "Run an Existing Course"),
-    (3, "Extend an Existing Course"),
-)
+from msc_qas.course.defaults import COURSE_CATEGORY
 
 
 class Course(models.Model):

@@ -6,12 +6,18 @@
     <link href="{{ MEDIA_URL }}css/text.css" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ MEDIA_URL }}css/960.css" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ MEDIA_URL }}css/style.css" media="all" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}libs/uni_form/uni-form.css" type="text/css" />
+    
     <link rel="stylesheet" href="{{ MEDIA_URL }}libs/uni_form/default.uni-form.css" type="text/css" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.8.12.custom.css" type="text/css" />
 
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.8.12.custom.min.js"></script>
     <script src="{{ MEDIA_URL }}libs/uni_form/uni-form.jquery.js" type="text/javascript"></script>
-
+    <script type="text/javascript">
+    $(document).ready(function(){
+        {% block jquery %}{% endblock %}
+    });
+    </script>
 </head>
 <body>
     <div id='wrapper'>
