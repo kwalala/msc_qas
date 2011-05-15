@@ -21,7 +21,7 @@
 
     $('a.btn-delete').live("click", function(e) {
         e.preventDefault();
-        $(this).parent()
+        $(this).parent().parent()
             .slideUp()
             .queue("fx", function() {
                 $(this).remove();
@@ -38,21 +38,52 @@
         }
         return false;
     });
-{% endblock %}
-{% block content %}
-<h1>Define milestones for {{ course.name }}</h1>
-<ul class='hidden' id='ml-template' >
-    <li class="ui-state-default">
-        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-        [CONTENT] [<a href='' class='btn-delete'>x</a>]
-    </li>
-</ul>
-<div>
-    <ul id='milestones' class='sortable-list'></ul>
 
-    <form id='add-ms'>
-        <input id='add-ms-content' type='text' value=''></input>
-        <input type='submit' value='Add milestone'></input>
-    </form>
+    $('#btn-submit').click(function() {
+        var ms_array = new Array();
+        milestones.find("li span.content").each(function() {
+            ms_array.push($(this).text());
+        });
+        alert("TODO: post ms_array");
+    });
+
+{% endblock %}
+
+{% block content %}
+<div>
+<h1>Define milestones for {{ course.name }}</h1>
+</div>
+
+<div class='container_16'>
+    <div class='grid_11'>
+        <ul class='hidden' id='ml-template' >
+            <li class="ui-state-default">
+                <span class="ui-icon ui-icon-arrowthick-2-n-s icon"></span>
+                <span class='content'>[CONTENT]</span> 
+                <span>[<a href='' class='btn-delete'>x</a>]</span>
+            </li>
+        </ul>
+        <div>
+            <ul id='milestones' class='sortable-list'></ul>
+
+            <form id='add-ms'>
+                <input id='add-ms-content' type='text' value=''></input>
+                <input type='submit' value='Add milestone'></input>
+            </form>
+        </div>
+    </div>
+    <div class='grid_5'>
+        <ul>
+            <li>Course Name: {{ course.name }}</li>
+            <li>Course Leader: {{ course.leader.username }}</li>
+            <li>.... more details ... </li>
+            <li>.... more details ... </li>
+            <li>.... more details ... </li>
+        </ul>
+        <button id='btn-submit'>Submit and activate course</button>
+        <div class='footnote'>
+        The course leader will be notified.
+        </div>
+    </div>
 </div>
 {% endblock %}

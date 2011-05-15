@@ -74,9 +74,15 @@ form.login input.submit-button {
 .sortable-list {
 
 }
-.sortable-list { list-style-type: none; margin: 10; padding: 0; width: 60%; }
+.sortable-list { list-style-type: none; margin: 10; padding: 0; width: 90%; }
 .sortable-list li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px;  cursor: move;}
-.sortable-list li span { position: absolute; margin-left: -1.3em;}
+.sortable-list li span.icon { position: absolute; margin-left: -1.3em;}
 .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
 
 .hidden { display: none; }
+
+.footnote {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #999;
+}
