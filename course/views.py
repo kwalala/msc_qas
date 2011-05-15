@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
@@ -14,10 +15,17 @@ def course_add(request, template_name="course/add.html"):
             course.admin = request.user
             course.save()
             return HttpResponseRedirect(reverse('course_activate', 
-                        kwargs={"id":course.id}))
+                        kwargs={"cid":course.id}))
     else:
         form = CourseForm()
     
     return render_to_response(template_name, {
         'form' : form,
+    }, context_instance=RequestContext(request))
+
+def course_activate(request, cid, template_name="course/activate.html"):
+    course = get_object_or_404(request.user.course_administered,
+                    id=cid, activated=False)
+    return render_to_response(template_name, {
+        'course' : course,
     }, context_instance=RequestContext(request))

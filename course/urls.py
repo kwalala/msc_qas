@@ -8,7 +8,7 @@ urlpatterns = patterns('msc_qas.course.views',
         name="course_add",
     ),
     
-    url('^/(?P<pid>\d+)/activate/$',
+    url('^(?P<cid>\d+)/activate/$',
         view="course_activate",
         name="course_activate",
     ),

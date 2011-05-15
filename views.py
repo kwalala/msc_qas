@@ -23,7 +23,7 @@ def dashboard(request, template_name="dashboard.html"):
     incomplete_courses = request.user.course_administered.filter(activated=False)
     courses = request.user.course_administered.filter(activated=True) #, complete=False
     return render_to_response(template_name, {
-        "incomplete": incomplete,
+        "incomplete_courses": incomplete_courses,
         "courses": courses,
     }, context_instance=RequestContext(request))
     

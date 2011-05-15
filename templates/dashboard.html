@@ -14,24 +14,24 @@ Welcome {{ user.username }}
 
 {% if incomplete_courses %}
 <div id='course-listing'>
-<h2>Pending activation</h2>
-<ul>
-{% for course in incomplete_courses %}
-    <li>{{ course.name }}</li>
-{% endfor %}
-</ul>
+    <h2>Pending activation</h2>
+    <ul>
+    {% for course in incomplete_courses %}
+        <li><a href='{% url course_activate course.id %}'>{{ course.name }}</a></li>
+    {% endfor %}
+    </ul>
 </div>
 {% endif %}
 
 <div id='course-listing'>
-<h2>Active courses</h2>
-<ul>
-{% for course in courses %}
-    <li>{{ course.name }}</li>
-{% empty %}
-    <li>-- no courses --</li>
-{% endfor %}
-</ul>
+    <h2>Active courses</h2>
+    <ul>
+    {% for course in courses %}
+        <li>{{ course.name }}</li>
+    {% empty %}
+        <li>-- no courses --</li>
+    {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}
