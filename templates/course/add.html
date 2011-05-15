@@ -1,0 +1,16 @@
+{% extends "base/one_col.html" %}
+{% load uni_form_tags %}
+
+{% block title %}Add new course{% endblock %}
+
+{% block content %}
+<h1>Add new course</h1>
+
+<div>
+    <form action="" method="post" class="uniForm">
+    {% with form.helper as helper %}
+        {% uni_form form helper %}
+    {% endwith %}
+    </form>
+</div>
+{% endblock %}

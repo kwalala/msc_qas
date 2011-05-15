@@ -1,0 +1,37 @@
+{% extends "base/one_col.html" %}
+
+{% block title %}{{ block.super }}Dashboards{% endblock title %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+Welcome {{ user.username }}
+
+
+<div id='links'>
+<a href='{% url course_add %}'>Add course</a>
+</div>
+
+{% if incomplete_courses %}
+<div id='course-listing'>
+<h2>Pending activation</h2>
+<ul>
+{% for course in incomplete_courses %}
+    <li>{{ course.name }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+<div id='course-listing'>
+<h2>Active courses</h2>
+<ul>
+{% for course in courses %}
+    <li>{{ course.name }}</li>
+{% empty %}
+    <li>-- no courses --</li>
+{% endfor %}
+</ul>
+</div>
+
+{% endblock %}

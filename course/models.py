@@ -23,10 +23,12 @@ class Course(models.Model):
                     verbose_name="Developers",
                     null=True, blank=True)
     date_created = models.DateTimeField("Date Created", auto_now_add=True)
-    date_target = models.DateTimeField("Target Finish Date")
+    date_target = models.DateField(verbose_name="Target Finish Date")
     category = models.PositiveIntegerField("Category",
                     choices=COURSE_CATEGORY,
                     default=1)
+    activated = models.BooleanField(default=False)
+    complete = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "%s" % self.name

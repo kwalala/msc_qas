@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{ block.super }}Home{% endblock title %}
+
+{% block base_content %}
+
+<div id='login-container' class='container_16'>
+    <div id='login-form-container' class='grid_10 prefix_3'>
+    <div id='login-form'>
+
+        {% if form.errors %}
+        <div class="errornote" class='clearfix'>Invalid username/password. Please try again.</div>
+        {% endif %}
+
+        <form method="post" action="." class='login'>
+            <div class='form-row {{ form.username.errors|yesno:"has-error," }}'>
+                <label for='id_username'>Username</label>
+                {{ form.username.errors }}
+                {{ form.username }}
+            </div>
+            <div class='form-row {{ form.password.errors|yesno:"has-error," }}'>
+                <label for='id_password'>Password</label>
+                {{ form.password.errors }}
+                {{ form.password }}
+            </div>
+
+            <div class='submit-row'>
+                <input type="submit" class='submit-button' value="Log in" />
+            </div>
+            <input type='hidden' name='next' value='{{ next|default:"/" }}' />
+            {% csrf_token %}
+        </form>
+
+    </div>
+    </div>
+</div>
+{% endblock %}
