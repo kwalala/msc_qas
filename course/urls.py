@@ -22,5 +22,11 @@ urlpatterns = patterns('msc_qas.course.views',
         view="milestone_edit",
         name="milestone_edit",
     ),
+    
+    url('^a/(?P<cid>\d+)/milestone/(?P<mid>\d+)/tasks/add$',
+        view="ajax_add_tasks",
+        name="ajax_add_tasks",
+    ),
+    
 )
 

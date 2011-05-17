@@ -17,4 +17,4 @@ class MilestoneForm(forms.ModelForm):
         model = Milestone
         fields = ("name", "approver", "date_target")
     helper = FormHelper()
-    helper.add_input(Submit('submit', 'Save Changes'))
+    helper.add_input(Submit('submit', 'Save Milestone Details'))

@@ -1,7 +1,8 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404
@@ -85,10 +86,19 @@ def milestone_edit(request, cid, mid, template_name="course/milestone.html"):
     if request.user not in (course.leader, course.admin):
         return HttpResponseForbidden("Access Forbidden")
     milestone = get_object_or_404(course.milestone_set, id=mid)
-    form = MilestoneForm(instance=milestone)
+    
+    if request.method == "POST":
+        form = MilestoneForm(request.POST, instance=milestone)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('course_view', 
+                        kwargs={"cid":course.id}))
+    else:
+        form = MilestoneForm(instance=milestone)
     
     managers = Group.objects.get(name="manager").user_set.all()
     form.fields["approver"].queryset = managers
+    
     
     return render_to_response(template_name, {
         'course': course,
@@ -99,5 +109,33 @@ def milestone_edit(request, cid, mid, template_name="course/milestone.html"):
     }, context_instance=RequestContext(request)) 
         
 
+@login_required
+def ajax_add_tasks(request, cid, mid):
+    if not request.is_ajax:
+        return HttpResponseBadRequest()
+        
+    course = get_object_or_404(Course, id=cid, activated=True, complete=False)
+    if request.user not in (course.leader, course.admin):
+        return HttpResponseForbidden("Access Forbidden")
+    milestone = get_object_or_404(course.milestone_set, id=mid)
     
+    items = [(k,v) for k,v in request.POST.items()]
+    items.sort()
+    for _,item in items:
+        task_id, dev_id, task_name = item.split(";")
+        print item.split(";")
+        if not task_id:
+            task = Task(name=task_name, milestone=milestone)
+        else:
+            task = milestone.task_set.get(id=task_id)
+        developer = Group.objects.get(name="developer").user_set.get(id=dev_id)
+        task.developer = developer
+        task.save()
+        
+        if not course.developers.filter(id=dev_id).exists():
+            course.developers.add(developer)
+            
+    return HttpResponse("OK")
+        
+        
     

@@ -4,12 +4,15 @@
 {% block title %}{{ milestone.name }} ({{ course.name }}){% endblock title %}
 
 {% block jquery %}
+    var changes = false;
 
     function change_dev(task, dev) {
         var dev_name = dev.attr("data-name");
         var dev_id = dev.attr("data-id");
         task.attr("data-dev", dev_id);
         task.find("td.developer").text(dev_name);
+        changes = true;
+        $('#btn-save-tasks').attr("disabled", false);
     }
 
     $('#dev-list').find("li").draggable({
@@ -36,7 +39,7 @@
         var task_name = input_name.val().trim();
         if (task_name == "") { return; }
         
-        var row = $("<tr />")
+        var row = $("<tr />", {"data-name": task_name})
             .append($("<td/>", {"class":"name", "text":task_name, "style":"width:470px"}))
             .append($("<td/>", {"class":"developer", "text":"-"}))
             .append($("<td/>", {"class":"complete", "text":"no"}))
@@ -44,10 +47,64 @@
             .droppable(droppable_opts);
 
         input_name.val("");
+        changes = true;
+        $('#btn-save-tasks').attr("disabled", false);
+    });
+
+    function save_tasks(callback_success, callback_done) {
+        $('#btn-save-tasks').attr("disabled", true);
+        $('#new-task-name').attr("disabled", true);
+
+        var task_array = {};
+
+        $('#task-list-items').find("tr").each(function(index){
+            var task_id = $(this).attr("data-id");
+            var task_name = $(this).attr("data-name");
+            var dev_id = $(this).attr("data-dev");
+            if (!dev_id) {
+                alert("Task '"+task_name+"' has not been assigned to a developer");
+                $('#btn-save-tasks').attr("disabled", false);
+                $('#new-task-name').attr("disabled", false);
+                return;
+            }
+            if (!task_id) { task_id = ""; }
+            task_array[index] = task_id + ";" + dev_id + ";" + task_name;
+        })
+
+        $.ajax({
+            type: "POST",
+            url: '{% url ajax_add_tasks course.id milestone.id %}',
+            data: task_array,
+            success: callback_success,
+            error: function() { alert("Operation failed!"); },
+            complete: function() {
+                $('#btn-save-tasks').attr("disabled", false);
+                $('#new-task-name').attr("disabled", false);
+                changes = false;
+                if ($.isFunction(callback_done)) { 
+                    callback_done(); 
+                }
+            }
+        });
+    }
+    $('#btn-save-tasks').click(function() {
+        $('#btn-save-spinner').show();
+        save_tasks(function() {
+            return;
+        }, function() {
+            $('#btn-save-spinner').hide();
+        })
     });
 
     // TODO: limit end date to target end date for course
     $('#id_date_target').datepicker({minDate:"+0", "dateFormat":"dd/mm/yy"});
+
+    $('#update-details-form').submit(function() {
+        if ( changes ) {
+            alert("You've made changes to the task list. Save that first.");
+            return false;
+        }
+    });
 
 {% endblock jquery %}
 
@@ -67,7 +124,7 @@
 </thead>
 <tbody id='task-list-items'>
 {% for task in tasks %}
-<tr data-id='{{ task.id }}' class='{{ task.complete|yesno:"complete," }}' data-dev='{{ task.developer.id }}'>
+<tr data-id='{{ task.id }}' class='{{ task.complete|yesno:"complete," }}' data-dev='{{ task.developer.id }}' data-name='{{ task.name }}'>
     <td class='name'>{{ task.name }}</td>
     <td class='developer'>{{ task.developer.get_full_name }}</td>
     <td class='complete'>{{ task.complete|yesno:"yes,no" }}</td>
@@ -90,15 +147,19 @@
 </tfoot>
 </table>
 
+<div style='text-align:right'>
+    <span id='btn-save-spinner' class='hidden'>Saving changes ... <img src='{{ MEDIA_URL }}img/spinner.gif' /></span>
+    <button id='btn-save-tasks' disabled='true'>Save changes to tasks</button>
+</div>
+
+<br />
 <h2 class='underlined'>Milestone details</h2>
-<form action="" method="post" class="uniForm">
+<form action="" method="post" class="uniForm" id='update-details-form'>
 {% with form.helper as helper %}
     {% uni_form form helper %}
 {% endwith %}
 </form>
-
-<div style='text-align:right'>
-</div>
+<br /><br />
 
 {% endblock %}
 
