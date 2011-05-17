@@ -143,6 +143,26 @@ form.login input.submit-button {
     font-weight: bold;
 }
 
+.section-box { margin: 10px 0px 20px 0px; border: 3px solid #ddd;}
+.section-box .section-head { margin:0; padding:0; }
+.section-box .section-links { 
+    padding: 1px 20px 1px 10px;
+    padding-right: 20px;
+    padding-top: 1px;
+    color: #777;
+    float: right; 
+}
+.section-box .section-title {
+    float: right;
+    background-color: #ddd;
+    color: #777;
+    padding: 1px 10px 3px 10px;
+}
+.section-box .section-content {
+    
+    padding: 10px;
+}
+
 .tasks {
     list-style: none;
 }
@@ -161,4 +181,22 @@ form.login input.submit-button {
 
 .tasks li:hover {
     background-color: #F5F6CE;
+}
+
+
+.item-listing {
+    list-style: none; margin-left: 0px;
+}
+.item-listing li {
+
+    padding: 3px;
+    padding-left: 10px;
+    margin-top: 3px;
+    margin-left: 10px;
+}
+.item-listing li:hover {
+    background-color: #F5F6CE;
+}
+.underlined {
+    border-bottom: 1px solid #ddd;
 }

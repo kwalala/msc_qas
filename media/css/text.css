@@ -6,9 +6,9 @@ a:hover { text-decoration: underline; }
 
 p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset { margin-bottom:20px }
 
-h1 { font-size:25px; }
-h2 { font-size:23px }
-h3 { font-size:21px } 
+h1 { font-size:20px; color: #26587F; }
+h2 { font-size:17px; color: #26587F; }
+h3 { font-size:15px; color: #26587F; } 
 h4 { font-size:19px } 
 h5 { font-size:17px } 
 h6 { font-size:15px } 

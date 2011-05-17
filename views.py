@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.conf import settings
 
 from course.models import Course
+MAX_COMPLETED_SHOWN = 5
 
 def index(request, template_name="index.html"):
     "If logged in, redirect to dashboard. Else, show login form"
@@ -23,19 +24,29 @@ def logout(request):
     
 @login_required
 def dashboard(request, template_name="dashboard.html"):
-    incomplete_courses = request.user.course_administered.filter(activated=False)
-    courses = request.user.course_administered.filter(activated=True) #, complete=False
+    roles = [g.name for g in request.user.groups.all()]
+    c = {"roles":roles}
+    
+    if "manager" in roles:  # managers (observer) can see all active courses
+        # TODO: pending approvals
+        active = Course.objects.filter(activated=True)
+        c["mgr_current_courses"] = active.filter(complete=False)
+        c["mgr_completed_courses"] = active.filter(complete=True)[:MAX_COMPLETED_SHOWN]
+    
+    if "course_admin" in roles:
+        current = request.user.course_administered.filter(complete=False)
+        archive = request.user.course_administered.filter(complete=True)
+        c["adm_inactive_courses"] = current.filter(activated=False)
+        c["adm_current_courses"] = current.filter(activated=True)
+        c["adm_completed_courses"] = archive[:MAX_COMPLETED_SHOWN]
+
+    # all users are devs. Only see courses they've been assigned to
     course_dev = request.user.course_developed.filter(activated=True)
-    courses_dev_active =  course_dev.filter(complete=False)
-    courses_dev_completed = course_dev.filter(complete=True)
+    c["current_courses"] =  course_dev.filter(complete=False)
+    c["completed_courses"] = course_dev.filter(complete=True)[:MAX_COMPLETED_SHOWN]
     
     #courses_active = request.user.course_administered.filter(activated=True) #, complete=False
-    return render_to_response(template_name, {
-        "incomplete_courses": incomplete_courses,
-        "courses": courses,
-        "courses_dev_active": courses_dev_active,
-        "courses_dev_completed": courses_dev_completed,
-    }, context_instance=RequestContext(request))
+    return render_to_response(template_name, c, context_instance=RequestContext(request))
     
     
 

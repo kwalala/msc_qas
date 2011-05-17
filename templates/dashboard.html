@@ -4,23 +4,54 @@
 
 {% block content %}
 
-<div id='links'>
-Logged in as {{ user.username }}
-</div>
-
-
-<div class='box'>
-    <div class='footnote' style='text-align:right'>Course Administrators' view</div>
+{% if "manager" in roles %}
+<div class='section-box'>
+    <div class='section-head clearfix'><div class='section-title'>Overview of Courses</div></div>
+    <div class='section-content'>
 
     <div>
-     [ <a href='{% url course_add %}'>Add course</a> ]
+        <h2 class='underlined'>Active courses</h2>
+        <ul class='item-listing'>
+        {% for course in mgr_current_courses %}
+            <li><a href='{% url course_view course.id %}'>{{ course.name }}</a></li>
+        {% empty %}
+            <li>-- none --</li>
+        {% endfor %}
+        </ul>
     </div>
 
-    {% if incomplete_courses %}
+    {% if mgr_completed_courses %}
+    <div>
+        <h2 class='underlined'>mgr_completed_courses courses</h2>
+        <ul class='item-listing'>
+        {% for course in completed_courses %}
+            <li>{{ course.name }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    </div>
+</div>
+{% endif %}
+
+{% if "course_admin" in roles %}
+<div class='section-box'>
+    <div class='section-head clearfix'>
+        <div class='section-title'>Course Administration:</div>
+        <div class='section-links'>
+            <a href='{% url course_add %}'>Add a course</a>
+        </div>
+
+    </div>
+    <div class='section-content'>
+
+
+    {% if adm_inactive_courses %}
     <div id='course-pending'>
-        <h2>Pending Courses</h2>
-        <ul>
-        {% for course in incomplete_courses %}
+        <h2 class='underlined'>Courses awaiting activation:</h2>
+        <ul class='item-listing'>
+        {% for course in adm_inactive_courses %}
             <li>
                 <a href='{% url course_activate course.id %}'>{{ course.name }}</a>
                 <i>(Created {{ course.date_created|timesince }} ago)</i>
@@ -31,38 +62,44 @@ Logged in as {{ user.username }}
     {% endif %}
 
     <div id='course-active'>
-        <h2>Active courses</h2>
-        <ul>
-        {% for course in courses %}
+        <h2 class='underlined'>Active courses:</h2>
+        <ul class='item-listing'>
+        {% for course in adm_current_courses %}
             <li>{{ course.name }}</li>
         {% empty %}
             <li>-- none --</li>
         {% endfor %}
         </ul>
     </div>
+    </div>
 </div>
+{% endif %}
 
-<div class='box'>
-    <div class='footnote' style='text-align:right'>Course Developers' view</div>
+<div class='section-box'>
+    <div class='section-head clearfix'><div class='section-title'>Course Development</div></div>
+    <div class='section-content'>
+
     <div id='course-dev-active'>
-        <h2>Active courses</h2>
-        <ul>
-        {% for course in courses_dev_active %}
+        <h2 class='underlined'>Active courses</h2>
+        <ul class='item-listing'>
+        {% for course in current_courses %}
             <li><a href='{% url course_view course.id %}'>{{ course.name }}</a></li>
         {% empty %}
             <li>-- none --</li>
         {% endfor %}
         </ul>
     </div>
+
+    {% if completed_courses %}
     <div id='course-dev-completed'>
-        <h2>Completed courses</h2>
-        <ul>
-        {% for course in courses_dev_completed %}
+        <h2 class='underlined'>Completed courses</h2>
+        <ul class='item-listing'>
+        {% for course in completed_courses %}
             <li>{{ course.name }}</li>
-        {% empty %}
-            <li>-- none --</li>
         {% endfor %}
         </ul>
+    </div>
+    {% endif %}
     </div>
 </div>
 
