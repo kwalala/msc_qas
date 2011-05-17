@@ -37,8 +37,14 @@
         
         <div id='header'>
             <div id='header-content' class='container_16 clearfix'>
-                <div id='header-logo' class='grid_3'>MSC_QAS</div>
-                <div id='header-data' class='grid_13'>{% block topbar %}{% endblock %}</div>
+                <div id='header-logo' class='grid_3'><a href='{% url dashboard %}'>MSC_QAS</a></div>
+                <div id='header-data' class='grid_13'>
+                    <div id='welcome-bar'>
+                        {% if user.is_authenticated %}
+                        Logged in as <strong>{{ user.username }}</strong> [ <a href='{% url logout %}'>Log Out</a> ]
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
 

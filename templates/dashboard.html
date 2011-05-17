@@ -65,7 +65,7 @@
         <h2 class='underlined'>Active courses:</h2>
         <ul class='item-listing'>
         {% for course in adm_current_courses %}
-            <li>{{ course.name }}</li>
+            <li><a href='{% url course_view course.id %}'>{{ course.name }}</a></li>
         {% empty %}
             <li>-- none --</li>
         {% endfor %}

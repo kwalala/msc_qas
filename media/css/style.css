@@ -17,6 +17,12 @@ body > #wrapper { min-height: 100%; height: auto; }
     font-weight: bold;
     font-size: 30px;
 }
+#header-logo a { color: #fff; }
+#header-logo a:hover { text-decoration: none }
+#welcome-bar {
+    padding-top: 20px;
+    text-align: right;
+}
 #footer {
     clear: both; position: relative; z-index: 10; height: 2em; margin-top: -2em;
     font: 12px 'Lucida Grande',Verdana;
