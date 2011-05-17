@@ -34,7 +34,7 @@ class Milestone(models.Model):
     name = models.CharField("Name", max_length=200)
     course = models.ForeignKey(Course)
     approver = models.ForeignKey(User)
-    date_target = models.DateTimeField("Target Finish Date")
+    date_target = models.DateField("Target Finish Date")
     completed = models.BooleanField(default=False)
     data_completed = models.DateTimeField("Date Completed", blank=True, null=True)
     approved = models.BooleanField(default=False)

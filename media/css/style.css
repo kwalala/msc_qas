@@ -1,6 +1,6 @@
 /* layout, with sticky footer */
-html, body, #wrapper { height: 100%; }
-body > #wrapper { min-height: 100%; height: auto; }
+html, body, #wrapper { height: 100%; background-color: #fff;}
+body > #wrapper { min-height: 100%; height: auto;}
 #content { padding-bottom: 2em; }
 
 #header { height: 60px; left: 0; top: 0; width: 100% }
@@ -234,9 +234,33 @@ form.login input.submit-button {
     cursor: move;
 }
 
-#task-list { list-style: none; margin: 20px 0px 20px 0px; padding: 0px;}
-#task-list li { 
-    padding: 3px 10px 3px 10px;
-    margin: 0px 0px 5px 0px;
-    border: 1px solid #ccc;
+#task-list { width: 100% }
+#task-list thead tr { border-bottom: 1px solid #97B2C6; }
+#task-list th {
+    color: #26587F;
+    text-align: left;
+}
+#task-list .complete { text-align: center; width:60px; }
+#task-list .name { width:470px; }
+#task-list tbody tr {
+    margin-top: 3px;
+    border-bottom: 1px solid #ccc;
+}
+#task-list tbody td {
+    padding: 5px 5px 5px 0px;
+}
+#task-list tbody tr.active {
+    background-color: #F5F6CE;
+}
+#task-list tbody tr.hover {
+    background-color: #fff;
+    border-right: 5px solid #ccc;
+}
+#task-list tbody tr.hover td.developer {
+    color: #ccc;
+}
+#task-list tfoot td {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
 }

@@ -1,8 +1,17 @@
 {% extends "base/two_col_12_4.html" %}
+{% load uni_form_tags %}
 
 {% block title %}{{ milestone.name }} ({{ course.name }}){% endblock title %}
 
 {% block jquery %}
+
+    function change_dev(task, dev) {
+        var dev_name = dev.attr("data-name");
+        var dev_id = dev.attr("data-id");
+        task.attr("data-dev", dev_id);
+        task.find("td.developer").text(dev_name);
+    }
+
     $('#dev-list').find("li").draggable({
         scroll: true,
         revert: "invalid",
@@ -11,18 +20,35 @@
         cursor: "move"
     }).disableSelection();
 
-    $('#task-list').find("li:not(.complete)").droppable({
+    var droppable_opts = {
         accept: "#dev-list li",
-        activeClass: "ui-state-hover",
-        hoverClass: "ui-state-active",
+        activeClass: "active",
+        hoverClass: "hover",
         drop: function( event, ui ) {
-            var task = $(this);
-            var dev = ui.draggable;
-            var task_id = task.attr("data-id");
-            var dev_u = dev.attr("data-username");
-            alert("assign dev " + dev_u + " to task " + task_id);
+            change_dev($(this), ui.draggable);
         }
+    };
+    $('#task-list').find("tr:not(.complete)").droppable(droppable_opts);
+
+    $('#new-task-form').bind("submit", function(e) {
+        e.preventDefault();
+        var input_name = $('#new-task-name');
+        var task_name = input_name.val().trim();
+        if (task_name == "") { return; }
+        
+        var row = $("<tr />")
+            .append($("<td/>", {"class":"name", "text":task_name, "style":"width:470px"}))
+            .append($("<td/>", {"class":"developer", "text":"-"}))
+            .append($("<td/>", {"class":"complete", "text":"no"}))
+            .appendTo($('#task-list-items'))
+            .droppable(droppable_opts);
+
+        input_name.val("");
     });
+
+    // TODO: limit end date to target end date for course
+    $('#id_date_target').datepicker({minDate:"+0", "dateFormat":"dd/mm/yy"});
+
 {% endblock jquery %}
 
 {% block content_top %}
@@ -30,13 +56,49 @@
 {% endblock %}
 
 {% block content %}
-<h2 class='underlined'>Tasks</h2>
 
-<ul id='task-list'>
+<table id='task-list'>
+<thead>
+<tr>
+    <th class='name'>Task Name</th>
+    <th>Assigned To</th>
+    <th class='complete'>Completed?</th>
+</tr>
+</thead>
+<tbody id='task-list-items'>
 {% for task in tasks %}
-    <li data-id='{{ task.id }}' class='{{ task.complete|yesno:"complete," }}'>{{ task.name }}</li>
+<tr data-id='{{ task.id }}' class='{{ task.complete|yesno:"complete," }}' data-dev='{{ task.developer.id }}'>
+    <td class='name'>{{ task.name }}</td>
+    <td class='developer'>{{ task.developer.get_full_name }}</td>
+    <td class='complete'>{{ task.complete|yesno:"yes,no" }}</td>
+</tr>
 {% endfor %}
-</ul>
+</tbody>
+<tfoot>
+<tr>
+
+    <form id='new-task-form'>
+    <td class='name'>
+        <input type='text' name='name' style="width:450px;" id='new-task-name' /> 
+    </td>
+    <td colspan='2'>
+<!--         <input type='submit' name='submit' value='Add task'/> --> &nbsp;
+    </td>
+    </form>
+
+</tr>
+</tfoot>
+</table>
+
+<h2 class='underlined'>Milestone details</h2>
+<form action="" method="post" class="uniForm">
+{% with form.helper as helper %}
+    {% uni_form form helper %}
+{% endwith %}
+</form>
+
+<div style='text-align:right'>
+</div>
 
 {% endblock %}
 
@@ -44,7 +106,7 @@
 <div class='footnote'>Assign developers to task by drag-droping the developer onto tasks</div>
 <ul id='dev-list'>
 {% for dev in developers %}
-    <li data-id='{{ dev.id }}' data-username='{{ dev.username }}'>{{ dev.get_full_name }}</li>
+    <li data-id='{{ dev.id }}' data-name='{{ dev.get_full_name }}'>{{ dev.get_full_name }}</li>
 {% endfor %}
 </ul>
 {% endblock %}

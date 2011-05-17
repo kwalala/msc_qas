@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 
-from course.forms import CourseForm
+from course.forms import CourseForm, MilestoneForm
 from course.defaults import MILESTONE_TEMPLATES
 from course.models import Milestone, Task, Course
 
@@ -85,32 +85,19 @@ def milestone_edit(request, cid, mid, template_name="course/milestone.html"):
     if request.user not in (course.leader, course.admin):
         return HttpResponseForbidden("Access Forbidden")
     milestone = get_object_or_404(course.milestone_set, id=mid)
+    form = MilestoneForm(instance=milestone)
+    
+    managers = Group.objects.get(name="manager").user_set.all()
+    form.fields["approver"].queryset = managers
+    
     return render_to_response(template_name, {
         'course': course,
         'milestone': milestone,
+        'form' : form,
         'tasks' : milestone.task_set.all(),
         'developers': Group.objects.get(name="developer").user_set.all(),
     }, context_instance=RequestContext(request)) 
         
-#@login_required
-#def course_view(request, cid, template_name="course/view.html"):
-    #course = get_object_or_404(request.user.course_developed,
-                    #id=cid, activated=True)
-                    
-    #if request.is_ajax():
-        ## TODO: error checks
-        #task_name = request.POST["task_name"]
-        #user_id = request.POST["user_id"]
-        #ms_id = request.POST["ms_id"]
-        
-        #milestone = course.milestone_set.get(id=ms_id)
-        #dev = course.developers.get(id=user_id)
-        #task = Task(name=task_name, milestone=milestone, developer=dev)
-        #task.save()
-        #return HttpResponse("OK")
-        
-    #return render_to_response(template_name, {
-        #'course' : course,
-    #}, context_instance=RequestContext(request))
+
     
     
