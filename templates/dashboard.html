@@ -3,38 +3,67 @@
 {% block title %}{{ block.super }}Dashboards{% endblock title %}
 
 {% block content %}
-<h1>Dashboard</h1>
 
 <div id='links'>
-Logged in as {{ user.username }} [ <a href='{% url course_add %}'>Add course</a> ]
+Logged in as {{ user.username }}
 </div>
 
-<hr />
 
-{% if incomplete_courses %}
-<div id='course-listing'>
-    <h2>Pending Courses</h2>
-    <ul>
-    {% for course in incomplete_courses %}
-        <li>
-            <a href='{% url course_activate course.id %}'>{{ course.name }}</a>
-            <i>(Created {{ course.date_created|timesince }} ago)</i>
-        </li>
-    {% endfor %}
-    </ul>
+<div class='box'>
+    <div class='footnote' style='text-align:right'>Course Administrators' view</div>
+
+    <div>
+     [ <a href='{% url course_add %}'>Add course</a> ]
+    </div>
+
+    {% if incomplete_courses %}
+    <div id='course-pending'>
+        <h2>Pending Courses</h2>
+        <ul>
+        {% for course in incomplete_courses %}
+            <li>
+                <a href='{% url course_activate course.id %}'>{{ course.name }}</a>
+                <i>(Created {{ course.date_created|timesince }} ago)</i>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div id='course-active'>
+        <h2>Active courses</h2>
+        <ul>
+        {% for course in courses %}
+            <li>{{ course.name }}</li>
+        {% empty %}
+            <li>-- none --</li>
+        {% endfor %}
+        </ul>
+    </div>
 </div>
-{% endif %}
 
-<div id='course-listing'>
-    <h2>Active courses</h2>
-    <ul>
-    {% for course in courses %}
-        <li>{{ course.name }}</li>
-    {% empty %}
-        <li>-- none --</li>
-    {% endfor %}
-    </ul>
+<div class='box'>
+    <div class='footnote' style='text-align:right'>Course Developers' view</div>
+    <div id='course-dev-active'>
+        <h2>Active courses</h2>
+        <ul>
+        {% for course in courses_dev_active %}
+            <li><a href='{% url course_view course.id %}'>{{ course.name }}</a></li>
+        {% empty %}
+            <li>-- none --</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id='course-dev-completed'>
+        <h2>Completed courses</h2>
+        <ul>
+        {% for course in courses_dev_completed %}
+            <li>{{ course.name }}</li>
+        {% empty %}
+            <li>-- none --</li>
+        {% endfor %}
+        </ul>
+    </div>
 </div>
-
 
 {% endblock %}

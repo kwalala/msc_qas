@@ -5,7 +5,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.conf import settings
+
+from course.models import Course
 
 def index(request, template_name="index.html"):
     "If logged in, redirect to dashboard. Else, show login form"
@@ -22,9 +25,16 @@ def logout(request):
 def dashboard(request, template_name="dashboard.html"):
     incomplete_courses = request.user.course_administered.filter(activated=False)
     courses = request.user.course_administered.filter(activated=True) #, complete=False
+    course_dev = request.user.course_developed.filter(activated=True)
+    courses_dev_active =  course_dev.filter(complete=False)
+    courses_dev_completed = course_dev.filter(complete=True)
+    
+    #courses_active = request.user.course_administered.filter(activated=True) #, complete=False
     return render_to_response(template_name, {
         "incomplete_courses": incomplete_courses,
         "courses": courses,
+        "courses_dev_active": courses_dev_active,
+        "courses_dev_completed": courses_dev_completed,
     }, context_instance=RequestContext(request))
     
     

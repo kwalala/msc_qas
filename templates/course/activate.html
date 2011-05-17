@@ -34,17 +34,25 @@
         e.preventDefault();
         var ms = $('#add-ms-content').val().trim();
         if (ms != "") {
+            // TODO: check for duplicate milestones.
+            // TODO: check at least one milestone.
             add_milestone(ms);
+            $('#add-ms-content').val("");
         }
         return false;
     });
 
     $('#btn-submit').click(function() {
-        var ms_array = new Array();
+        var ghost = $('#ghost-form');
         milestones.find("li span.content").each(function() {
-            ms_array.push($(this).text());
+            $("<input />", {
+                "name": "milestone",
+                "type": "checkbox",
+                "value": $(this).text(),
+                "checked": true
+            }).appendTo(ghost);
         });
-        alert("TODO: post ms_array");
+       ghost.submit();
     });
 
 {% endblock %}
@@ -86,4 +94,5 @@
         </div>
     </div>
 </div>
+<form id='ghost-form' action='' method='post' class='hidden'>{% csrf_token %}</form>
 {% endblock %}

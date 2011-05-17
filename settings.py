@@ -92,10 +92,14 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    #'django.contrib.messages',
+    'django.contrib.admin',
+    'django.contrib.messages',
 
     'course',
     'uni_form',
 )
 
 LOGIN_URL = "/"
+
+DEFAULT_APPROVER="clive"
+

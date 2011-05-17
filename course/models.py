@@ -36,9 +36,9 @@ class Milestone(models.Model):
     approver = models.ForeignKey(User)
     date_target = models.DateTimeField("Target Finish Date")
     completed = models.BooleanField(default=False)
-    data_completed = models.DateTimeField("Date Completed")
+    data_completed = models.DateTimeField("Date Completed", blank=True, null=True)
     approved = models.BooleanField(default=False)
-    data_approved = models.DateTimeField("Date Approved")
+    data_approved = models.DateTimeField("Date Approved", blank=True, null=True)
 
 
 class Task(models.Model):
@@ -46,8 +46,8 @@ class Task(models.Model):
     milestone = models.ForeignKey(Milestone)
     developer = models.ForeignKey(User)
     completed = models.BooleanField(default=False)
-    data_completed = models.DateTimeField("Date Completed")
-    position = models.IntegerField()
+    data_completed = models.DateTimeField("Date Completed", blank=True, null=True)
+    #position = models.IntegerField()
 
 
 class TaskNotes(models.Model):

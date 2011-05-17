@@ -86,3 +86,79 @@ form.login input.submit-button {
     font-size: 0.9em;
     color: #999;
 }
+
+.box {
+    border: 1px solid #aaa;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+#notification-bar {
+    position: fixed;
+    top: 60px;
+    left: 0px;
+    width: 100%;
+    display: none;
+}
+#notification-bar div {
+    width: 100%;
+    padding: 10px 60px 10px 150px;
+    font-size: 1.2em;
+    font-weight: bold;
+    z-index: 99;
+    border-bottom: 1px solid #ddd;
+}
+#notification-bar div.notif-error {
+    color: #fff;
+    background-color: #610B0B;
+}
+#notification-bar div.notif-warning {
+    color: #fff;
+    background-color: #8A4B08;
+}
+#notification-bar div.notif-info {
+    color: #fff;
+    background-color: #380B61;
+}
+#notification-bar div.notif-success {
+    color: #fff;
+    background-color: #38610B;
+}
+
+.milestone {
+    border: 2px dotted #999;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.milestone-complete {
+    border: 2px solid #38610B;
+}
+
+.milestone-not-complete {
+    border: 2px solid #B45F04;
+}
+
+.milestone .title {
+    font-weight: bold;
+}
+
+.tasks {
+    list-style: none;
+}
+.tasks li {
+    border-bottom: 1px solid #ddd;
+    padding: 3px;
+    padding-left: 10px;
+    margin-top: 3px;
+}
+.tasks li.complete {
+    border-left: 5px solid #070;
+}
+.tasks li.not-complete {
+    border-left: 5px solid #700;
+}
+
+.tasks li:hover {
+    background-color: #F5F6CE;
+}
