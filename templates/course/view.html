@@ -1,94 +1,73 @@
-{% extends "base/one_col.html" %}
+{% extends "base/two_col_12_4.html" %}
 
-{% block title %}{{ block.super }}{{ course.name }}{% endblock title %}
-{% block jquery %}
+{% block title %}{{ course.name }}{% endblock title %}
 
-    function add_task(ms_id, task_name, dev_name) {
-        $("<li class='not-complete'>"+task_name+" <span class='footnote'>("+dev_name+")</span></li>")
-            .hide()
-            .appendTo("#task-list-" + ms_id)
-            .slideDown();
-    }
-
-    function submit_new_task(form) {
-        var input_name = form.find("input[name='name']");
-        var task_name = input_name.val().trim();
-        if (task_name == "") { return; }
-
-        var ms_id = form.attr("data-ms-id");
-        var input_user = form.find("select[name='user']");
-        var input_submit = form.find("submit");
-        var user = input_user.val();
-        var user_name = form.find("option[value='"+user+"']").text();
-
-        input_name.attr("disabled", true);
-        input_user.attr("disabled", true);
-        input_submit.attr("disabled", true);
-        var spinner = form.find(".spinner").show();
-
-        $.ajax({
-            type: "post",
-            url: "{% url course_view course.id %}",
-            data: {
-                "task_name": task_name,
-                "user_id": user,
-                "ms_id": ms_id
-            },
-            success: function() {
-                add_task(ms_id, task_name, user_name);
-                input_name.val("");
-            },
-            error: function() {
-                alert("oops. Failed.");
-            },
-            complete: function() {
-                spinner.hide();
-                input_name.attr("disabled", false);
-                input_user.attr("disabled", false);
-                input_submit.attr("disabled", false);
-            }
-        });
-    }
-
-    $(".new-task-form").bind("submit", function(e) {
-        e.preventDefault();
-        submit_new_task($(this));
-    });
-
+{% block content_top %}
+<h1>Course : {{ course.name }}</h1>
 {% endblock %}
 
 {% block content %}
-
-<h1>{{ course.name }}</h1>
-
-<div class='milestone-container'>
-
-    {% for ms in course.milestone_set.all %}
-    <div class='milestone milestone-{{ course.completed|yesno:"complete,not-complete" }}'>
-        <div class='title'>{{ ms.name }}</div>
-        <div>
-            <ul class='tasks' id='task-list-{{ ms.id }}'>
-                {% for task in ms.task_set.all %}
-                    <li class='{{ task.completed|yesno:"complete,not-complete" }}'>
-                        {{ task.name }} <span class='footnote'>({{ task.developer.get_full_name }})</span>
-                    </li>
-                {% endfor %}
-            </ul>
-            {% if course.leader == user %}
-            <form class='new-task-form' data-ms-id='{{ ms.id }}'>
-                <input type='text' name='name' />
-                Assign to: <select name='user'>
-                    {% for dev in course.developers.all %}
-                        <option value='{{ dev.id }}'>{{ dev.get_full_name }}</option>
-                    {% endfor %}
-                </select>
-                <input type='submit' name='submit' value='Add New Task'/>
-                <span class='spinner hidden'><img src='{{ MEDIA_URL }}img/spinner.gif' /></span>
-            </form>
+<h2 class='underlined'>Milestones</h2>
+{% for ms in milestones %}
+    <div class='milestone milestone-{{ ms.complete|yesno:"complete,not-complete" }}'>
+        <div class='milestone-title'>
+            {{ ms.name }} 
+            {% if course.leader == user or course.admin == user %}
+                [<a href='{% url milestone_edit course.id ms.id %}'>edit</a>]
             {% endif %}
         </div>
+        <div class='tasks'>
+            <ul>
+            {% for task in ms.task_set.all %}
+                <li>{{ task.name }}</li>
+            {% endfor %}
+            </ul>
+        </div>
     </div>
-    {% endfor %}
+{% endfor %}
 
+{% endblock %}
+{% block content_right %}
+<div>
+<ul class='def-list'>
+    <li>
+        <span class='title'>Course Admin</span>
+        <span class='content'>{{ course.admin.get_full_name }}</span>
+    </li>
+    <li>
+        <span class='title'>Course Leader </span>
+        <span class='content'>{{ course.leader.get_full_name }}</span>
+    </li>
+    <li>
+        <span class='title'>Date Created </span>
+        <span class='content'>
+            {{ course.date_created|date }}<br />
+            ({{ course.date_created|timesince }} ago)
+        </span>
+    </li>
+    <li>
+        <span class='title'>Target Finish Date</span>
+        <span class='content'>
+            {{ course.date_target|date }}<br />
+            {% if course_due %}
+                {% if not course.complete %}
+                    (<span style='color:red'>Completion Due!</span>)
+                {% endif %}
+            {% else %}
+            ({{ course.date_target|timeuntil }} to go)
+            {% endif %}
+        </span>
+    </li>
+    <li>
+        <span class='title'>Developers: </span>
+        <span class='content'>
+            <ul>
+            {% for dev in course.developers.all %}
+                <li>{{ dev.get_full_name }}</li>
+            {% endfor %}
+            </ul>
+        </span>
+    </li>
+</ul>
 </div>
 {% endblock %}

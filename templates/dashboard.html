@@ -1,8 +1,13 @@
 {% extends "base/one_col.html" %}
 
-{% block title %}{{ block.super }}Dashboards{% endblock title %}
+{% block title %}Dashboard{% endblock title %}
 
 {% block content %}
+{% if not roles %}
+    <div>
+    You have not been assigned a role in this system. Nothing much you can do here...
+    </div>
+{% endif %}
 
 {% if "manager" in roles %}
 <div class='section-box'>
@@ -75,6 +80,7 @@
 </div>
 {% endif %}
 
+{% if "manager" in roles %}
 <div class='section-box'>
     <div class='section-head clearfix'><div class='section-title'>Course Development</div></div>
     <div class='section-content'>
@@ -102,5 +108,6 @@
     {% endif %}
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

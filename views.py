@@ -40,10 +40,10 @@ def dashboard(request, template_name="dashboard.html"):
         c["adm_current_courses"] = current.filter(activated=True)
         c["adm_completed_courses"] = archive[:MAX_COMPLETED_SHOWN]
 
-    # all users are devs. Only see courses they've been assigned to
-    course_dev = request.user.course_developed.filter(activated=True)
-    c["current_courses"] =  course_dev.filter(complete=False)
-    c["completed_courses"] = course_dev.filter(complete=True)[:MAX_COMPLETED_SHOWN]
+    if "developer" in roles:
+        course_dev = request.user.course_developed.filter(activated=True)
+        c["current_courses"] =  course_dev.filter(complete=False)
+        c["completed_courses"] = course_dev.filter(complete=True)[:MAX_COMPLETED_SHOWN]
     
     #courses_active = request.user.course_administered.filter(activated=True) #, complete=False
     return render_to_response(template_name, c, context_instance=RequestContext(request))

@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+
+{% block base_content %}
+<div class='container_16'>
+{% block content_top %}{% endblock %}
+</div>
+<div class='container_16'>
+    <div class='grid_12'>{% block content %}{% endblock %}</div>
+    <div class='grid_4'>{% block content_right %}{% endblock %}</div>
+</div>
+{% endblock %}

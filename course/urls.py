@@ -17,5 +17,10 @@ urlpatterns = patterns('msc_qas.course.views',
         view="course_view",
         name="course_view",
     ),
+    
+    url('^(?P<cid>\d+)/milestone/(?P<mid>\d+)$',
+        view="milestone_edit",
+        name="milestone_edit",
+    ),
 )
 

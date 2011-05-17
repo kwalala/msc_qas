@@ -132,7 +132,7 @@ form.login input.submit-button {
     background-color: #38610B;
 }
 
-.milestone {
+/*.milestone {
     border: 2px dotted #999;
     margin-top: 10px;
     padding: 5px;
@@ -148,7 +148,7 @@ form.login input.submit-button {
 
 .milestone .title {
     font-weight: bold;
-}
+}*/
 
 .section-box { margin: 10px 0px 20px 0px; border: 3px solid #ddd;}
 .section-box .section-head { margin:0; padding:0; }
@@ -169,7 +169,7 @@ form.login input.submit-button {
     
     padding: 10px;
 }
-
+/*
 .tasks {
     list-style: none;
 }
@@ -188,7 +188,7 @@ form.login input.submit-button {
 
 .tasks li:hover {
     background-color: #F5F6CE;
-}
+}*/
 
 
 .item-listing {
@@ -206,4 +206,37 @@ form.login input.submit-button {
 }
 .underlined {
     border-bottom: 1px solid #ddd;
+}
+
+.def-list { list-style: none; margin-left: 0px; }
+.def-list li {
+    margin-bottom: 10px;
+}
+.def-list li .title {
+    color: #26587F;
+    font-weight: bold;
+    display: block;
+}
+.def-list li .content {
+    margin-left: 20px;
+    color:#555;
+    display: block;
+}
+.def-list li .content ul { margin-left: 0px }
+.def-list li .content ul li { margin-left: 20px }
+
+#dev-list { list-style: none; margin: 20px 0px 20px 0px; padding: 0px;}
+#dev-list li { 
+    width: 200px;
+    padding: 3px 10px 3px 10px;
+    margin: 0px 0px 5px 0px;
+    border: 1px solid #888;
+    cursor: move;
+}
+
+#task-list { list-style: none; margin: 20px 0px 20px 0px; padding: 0px;}
+#task-list li { 
+    padding: 3px 10px 3px 10px;
+    margin: 0px 0px 5px 0px;
+    border: 1px solid #ccc;
 }

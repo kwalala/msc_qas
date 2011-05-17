@@ -1,0 +1,50 @@
+{% extends "base/two_col_12_4.html" %}
+
+{% block title %}{{ milestone.name }} ({{ course.name }}){% endblock title %}
+
+{% block jquery %}
+    $('#dev-list').find("li").draggable({
+        scroll: true,
+        revert: "invalid",
+        opacity: 0.7,
+        helper: "clone",
+        cursor: "move"
+    }).disableSelection();
+
+    $('#task-list').find("li:not(.complete)").droppable({
+        accept: "#dev-list li",
+        activeClass: "ui-state-hover",
+        hoverClass: "ui-state-active",
+        drop: function( event, ui ) {
+            var task = $(this);
+            var dev = ui.draggable;
+            var task_id = task.attr("data-id");
+            var dev_u = dev.attr("data-username");
+            alert("assign dev " + dev_u + " to task " + task_id);
+        }
+    });
+{% endblock jquery %}
+
+{% block content_top %}
+<h1>Updating milestone for {{ course.name }}:</h1>
+{% endblock %}
+
+{% block content %}
+<h2 class='underlined'>Tasks</h2>
+
+<ul id='task-list'>
+{% for task in tasks %}
+    <li data-id='{{ task.id }}' class='{{ task.complete|yesno:"complete," }}'>{{ task.name }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block content_right %}
+<div class='footnote'>Assign developers to task by drag-droping the developer onto tasks</div>
+<ul id='dev-list'>
+{% for dev in developers %}
+    <li data-id='{{ dev.id }}' data-username='{{ dev.username }}'>{{ dev.get_full_name }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
