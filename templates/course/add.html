@@ -4,8 +4,13 @@
 {% block title %}Add new course{% endblock %}
 
 {% block jquery %}
+    layBreadcrumbs([
+        {"title":"Dashboard", "url":"{% url dashboard %}"},
+        {"title":"New Course", "url": null}
+    ]);
     $('#id_date_target').datepicker({minDate:"+0", "dateFormat":"dd/mm/yy"});
 {% endblock %}
+
 {% block content %}
 <h1>Add new course</h1>
 

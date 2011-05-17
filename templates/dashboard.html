@@ -1,7 +1,11 @@
 {% extends "base/one_col.html" %}
 
 {% block title %}Dashboard{% endblock title %}
-
+{% block jquery %}
+    layBreadcrumbs([
+        {"title":"Dashboard", "url":null},
+    ]);
+{% endblock %}
 {% block content %}
 {% if not roles %}
     <div>

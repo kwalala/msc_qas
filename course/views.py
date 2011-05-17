@@ -73,7 +73,7 @@ def course_view(request, cid, template_name="course/view.html"):
         course_due = True
     else:
         course_due = False
-        
+    
     return render_to_response(template_name, {
         'course': course,
         'course_due': course_due,
@@ -137,5 +137,17 @@ def ajax_add_tasks(request, cid, mid):
             
     return HttpResponse("OK")
         
-        
+@login_required
+def ajax_mark_task_done(request, cid, mid, tid):
+    if not request.is_ajax:
+        return HttpResponseBadRequest()
+    course = get_object_or_404(Course, id=cid, activated=True, complete=False)
+    milestone = get_object_or_404(course.milestone_set, id=mid)
+    task = get_object_or_404(milestone.task_set, id=tid)
+    if request.user != course.leader and request.user != task.developer:
+        return HttpResponseForbidden("Access Forbidden")
+    task.completed = True
+    task.save()
+    
+    return HttpResponse("OK")
     

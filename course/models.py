@@ -39,6 +39,12 @@ class Milestone(models.Model):
     data_completed = models.DateTimeField("Date Completed", blank=True, null=True)
     approved = models.BooleanField(default=False)
     data_approved = models.DateTimeField("Date Approved", blank=True, null=True)
+    
+    def all_tasks_completed(self):
+        return not self.task_set.filter(completed=False).exists()
+        
+    def has_tasks(self):
+        return self.task_set.exists()
 
 
 class Task(models.Model):

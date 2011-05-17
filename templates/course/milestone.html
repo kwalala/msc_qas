@@ -4,6 +4,11 @@
 {% block title %}{{ milestone.name }} ({{ course.name }}){% endblock title %}
 
 {% block jquery %}
+    layBreadcrumbs([
+        {"title":"Dashboard", "url":"{% url dashboard %}"},
+        {"title":"Course: {{ course.name }}", "url": "{% url course_view course.id %}"},
+        {"title":"Milestone: {{ milestone.name }}", "url": null}
+    ]);
     var changes = false;
 
     function change_dev(task, dev) {

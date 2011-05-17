@@ -4,6 +4,10 @@
 {% block title %}Define milestones{% endblock %}
 
 {% block jquery %}
+    layBreadcrumbs([
+        {"title":"Dashboard", "url":"{% url dashboard %}"},
+        {"title":"Define Milestones", "url": null}
+    ]);
 
     var milestones = $('#milestones').sortable({placeholder: "ui-state-highlight"});
     var ml_tmpl = $('#ml-template').find("li:first-child");

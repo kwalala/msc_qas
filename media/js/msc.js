@@ -35,3 +35,23 @@ Notifier.prototype.display = function() {
     
     n.slideDown("slow").delay(this._timeout).slideUp();
 };
+
+/* build breadcrumb links */
+function layBreadcrumbs(crumb) {
+    var targetDivSelector = "#breadcrumbs";
+    var container = $("<span id='crumbs'></span>");
+    var content = ""
+
+    for (var i in crumb) {
+        var t = crumb[i]["title"];
+        var u = crumb[i]["url"];
+
+        if (u == null) { /* last item, not url */
+            content += t;
+            break;
+        } else {
+            content += "<a href='"+u+"'>"+t+"</a> &raquo; "
+        }
+    }
+    container.html(content).appendTo($(targetDivSelector));
+}

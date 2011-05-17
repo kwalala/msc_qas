@@ -1,7 +1,47 @@
 {% extends "base/two_col_12_4.html" %}
 
 {% block title %}{{ course.name }}{% endblock title %}
+{% block jquery %}
+    layBreadcrumbs([
+        {"title":"Dashboard", "url":"{% url dashboard %}"},
+        {"title":"Course: {{ course.name }}", "url": null}
+    ]);
 
+    $(".toggle-tasks").click(function(e) {
+        e.preventDefault();
+        var ms_id = $(this).attr("data-id");
+        $('#task-' + ms_id).slideToggle();
+    });
+
+    $("a.btn-task-done").click(function(e) {
+        e.preventDefault();
+        var tid = $(this).attr("data-tid");
+        var url = $(this).attr("data-url");
+        var spinner = $('#spinner-task-' + tid);
+        $(this).parent().hide();
+        spinner.show();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function() {
+                $('#li-task-' + tid).removeClass("not-complete").addClass("complete");
+            },
+            error: function() {
+                alert("Oopps. error. Try again later");
+            },
+            complete: function() {
+                spinner.hide();
+            }
+        });
+        
+    });
+
+    $("a.btn-mark-complete").click(function(e) {
+        e.preventDefault();
+        alert("A request for approval will be sent to the nominated approver.\n\n(NOT IMPLEMENTED YET) ");
+    });
+{% endblock %}
 {% block content_top %}
 <h1>Course : {{ course.name }}</h1>
 {% endblock %}
@@ -9,17 +49,42 @@
 {% block content %}
 <h2 class='underlined'>Milestones</h2>
 {% for ms in milestones %}
-    <div class='milestone milestone-{{ ms.complete|yesno:"complete,not-complete" }}'>
-        <div class='milestone-title'>
-            {{ ms.name }} 
+    <div class='milestone'>
+        <div >
+            <span class='milestone-title'>{{ ms.name }}</span>
+            (<a href='' class='toggle-tasks' data-id='{{ ms.id }}'>{{ ms.task_set.count }} task{{ ms.task_set.count|pluralize }}</a>)
             {% if course.leader == user or course.admin == user %}
-                [<a href='{% url milestone_edit course.id ms.id %}'>edit</a>]
+                [
+                    <a href='{% url milestone_edit course.id ms.id %}'>edit</a>
+                    {% if ms.has_tasks and ms.all_tasks_completed %}
+                    |  <a href='' class='btn-mark-complete'>Mark as complete</a>
+                    {% endif %}
+                ]
             {% endif %}
+
+                {% if ms.approved %}
+                <span class='label-approved'>Approved</span>
+                {% else %}
+                    {% if ms.completed %}
+                    <span class='label-complete'>complete</span>
+                    {% else %}
+                    <span class='label-incomplete'>Incomplete</span>
+                    {% endif %}
+                {% endif %}
+
         </div>
-        <div class='tasks'>
-            <ul>
+        <div class='tasks hidden' id='task-{{ ms.id }}'>
+            <ul class='task-status-list'>
             {% for task in ms.task_set.all %}
-                <li>{{ task.name }}</li>
+                <li class='{{ task.completed|yesno:"complete,not-complete" }}' data-id='{{ task.id }}' id='li-task-{{ task.id }}'>
+                    {{ task.name }}  <span class='footnote'>({{ task.developer.get_full_name }})</span>
+                    {% if task.developer == user or course.leader == user %}                  
+                        {% if not task.completed %}
+                        <span>[ <a href='' class='btn-task-done' data-tid='{{ task.id }}' data-url='{% url ajax_mark_task_done course.id ms.id task.id %}'>Mark as Done</a>] </span>
+                            <img src='{{ MEDIA_URL }}img/spinner.gif' id='spinner-task-{{ task.id }}' class='hidden' />
+                        {% endif %}
+                    {% endif %}
+                </li>
             {% endfor %}
             </ul>
         </div>
